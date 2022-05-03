@@ -1,0 +1,46 @@
+2022-04-14 10:38:44,150  [main] INFO  - Starting Registrar v0.0.4...
+2022-04-14 10:38:44,158  [main] INFO  - Connecting to Location Service server at localhost:1099 ...
+2022-04-14 10:38:44,199  [main] INFO  - Successfully connected.
+2022-04-14 10:38:44,242  [main] WARN  - No domains configured. Retreiving the domain list from Location Service...
+2022-04-14 10:38:44,244  [main] INFO  - Registrar is responsible for domains: openjsip.net
+2022-04-14 10:38:44,244  [main] INFO  - Authentication disabled.
+2022-04-14 10:38:44,248  [main] INFO  - Registration lifetime (seconds): min 60, max 3600
+2022-04-14 10:38:44,254  [main] INFO  - SNMP agent started at port 1162 with community public
+2022-04-14 10:38:44,279  [main] INFO  - Registrar registered as "Registrar" within RMI registry at localhost:1099
+2022-04-14 10:38:44,280  [main] INFO  - Registrar started...
+2022-04-14 10:40:26,213 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(2)-127.0.0.1] DEBUG - -------------------
+2022-04-14 10:40:26,215 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(2)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user1" <sip:user1@192.168.1.1>
+2022-04-14 10:40:26,264 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(2)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 10:40:44,845 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(2)-127.0.0.1] DEBUG - -------------------
+2022-04-14 10:40:44,845 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(2)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user2" <sip:user2@192.168.1.1>
+2022-04-14 10:40:44,856 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(2)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 10:49:26,302 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(6)-127.0.0.1] DEBUG - -------------------
+2022-04-14 10:49:26,302 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(6)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user1" <sip:user1@192.168.1.1>
+2022-04-14 10:49:26,312 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(6)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 10:49:44,881 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(7)-127.0.0.1] DEBUG - -------------------
+2022-04-14 10:49:44,881 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(7)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user2" <sip:user2@192.168.1.1>
+2022-04-14 10:49:44,890 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(7)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 10:58:26,323 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(11)-127.0.0.1] DEBUG - -------------------
+2022-04-14 10:58:26,323 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(11)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user1" <sip:user1@192.168.1.1>
+2022-04-14 10:58:26,331 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(11)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 10:58:44,908 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(13)-127.0.0.1] DEBUG - -------------------
+2022-04-14 10:58:44,908 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(13)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user2" <sip:user2@192.168.1.1>
+2022-04-14 10:58:44,916 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(13)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 11:07:26,342 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(17)-127.0.0.1] DEBUG - -------------------
+2022-04-14 11:07:26,342 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(17)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user1" <sip:user1@192.168.1.1>
+2022-04-14 11:07:26,349 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(17)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 11:07:44,925 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(18)-127.0.0.1] DEBUG - -------------------
+2022-04-14 11:07:44,925 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(18)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user2" <sip:user2@192.168.1.1>
+2022-04-14 11:07:44,932 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(18)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 11:16:26,368 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(23)-127.0.0.1] DEBUG - -------------------
+2022-04-14 11:16:26,368 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(23)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user1" <sip:user1@192.168.1.1>
+2022-04-14 11:16:26,374 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(23)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 11:16:44,951 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(23)-127.0.0.1] DEBUG - -------------------
+2022-04-14 11:16:44,951 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(23)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user2" <sip:user2@192.168.1.1>
+2022-04-14 11:16:44,956 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(23)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 11:25:26,397 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(27)-127.0.0.1] DEBUG - -------------------
+2022-04-14 11:25:26,397 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(27)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user1" <sip:user1@192.168.1.1>
+2022-04-14 11:25:26,403 92570fce67a3e03502b9b067c1ff6f5d@0:0:0:0:0:0:0:0 [RMI TCP Connection(27)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
+2022-04-14 11:25:44,979 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(28)-127.0.0.1] DEBUG - -------------------
+2022-04-14 11:25:44,979 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(28)-127.0.0.1] DEBUG - Incoming REGISTER request sip:192.168.1.1 To: "user2" <sip:user2@192.168.1.1>
+2022-04-14 11:25:44,984 a8381086897f375444e3ca83294ce598@0:0:0:0:0:0:0:0 [RMI TCP Connection(28)-127.0.0.1] DEBUG - Replied 200 ( OK ) 
