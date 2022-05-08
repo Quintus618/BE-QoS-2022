@@ -14,6 +14,30 @@ public class bandwidthbroker{
     // Tableau récapitulatif des connexions établies
     private ArrayList<Connexion> t_connexion = new ArrayList<Connexion>();
 
+    private int listening_port = 12121;//TODO se mettre d'accord avec le SIP
+
+    private List<InetAddress> ListIP = new ArrayList<InetAddress>();
+    //adresses IP du BB (en theorie une seule, 193.168.1.1)
+    private refreshListIP(){
+        for(Enumeration<NetworkInterface> ListNIC = NetworkInterface.getNetworkInterfaces(); eni.hasMoreElements(); ) {
+            final NetworkInterface NIC = ListNIC.nextElement();
+            if(NIC.isUp()) {
+                for(Enumeration<InetAddress> addrs_NIC = NIC.getInetAddresses(); addrs_NIC.hasMoreElements(); ) {
+                    ListIP.add(addrs_NIC.nextElement());
+                }
+            }
+        }
+    }
+
+    public bandwidthbroker(){
+
+        this.refreshListIP();
+
+        this.listenTCP();
+
+    }//TODO Ou supprimer le début du main
+
+
     // Vérifier si la connexion demandée peut être établie ou non
     // Quentin
     private boolean checkRessourceUtilization(double demand){
@@ -71,18 +95,25 @@ public class bandwidthbroker{
         }
     }
 
-    // Connexion TCP avec proxy SIP ENVOI
+    // Connexion TCP avec proxy SIP
     //TODO
     // Pierre
-    private void TCPSender(){
+    private listenTCP(){
+        try (ServerSocket servSock = new ServerSocket(listening_port)) {
+    
+            System.out.println("Attente de connexion sur le port " + listening_port);
 
-    }
+            while (true) {
+                Socket socket = servSock.accept();
+                System.out.println("Connexion d'un client TCP");
 
-    // Connexion TCP avec proxy SIP RECEPTION
-    //TODO
-    // Pierre
-    private void TCPReceiver(){
+                new ThreadTCP(socket).start();
+            }
 
+        } catch (IOException ex) {
+            System.out.println("Exception (serveur TCP): " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
     //Parser une string pour la table des connexions
@@ -98,7 +129,7 @@ public class bandwidthbroker{
     // Pierre
     private void sshEgressRouterSite(){
 
-    }
+    }//peut-etre à part aussi
 
     // Affichage du tableau des connexions et de l'utilisation des ressources en %
     //TODO
@@ -120,7 +151,7 @@ public class bandwidthbroker{
 
 
     public static void main(String[] args) {
-        bandwidthbroker b = new bandwidthbroker();
+        bandwidthbroker b = new bandwidthbroker();//non défini; pas sur que ça soit possible d'avoir une initialisation de sa propre classe dans son main
 
         boolean test = b.checkRessourceUtilization(0.5);
         if(test==true){
