@@ -9,14 +9,16 @@ public class Connexion{
     private int portReceiver;
     private double bandWidth;
     private String[] codecs;
+    private int id_branch;
 
-    public Connexion(InetAddress source, InetAddress receiver, int portSource, int portRecei, double bandWidth, String[] codecs){
+    public Connexion(InetAddress source, InetAddress receiver, int portSource, int portRecei, double bandWidth, String[] codecs, int id_branch){
         this.source = source;
         this.receiver = receiver;
         this.portSource = portSource;
         this.portReceiver = portRecei;
         this.bandWidth = bandWidth;
         this.codecs = new String[codecs.length];
+        this.id_branch = id_branch;
         System.arraycopy(codecs, 0, this.codecs, 0, this.codecs.length);
     }
 
@@ -78,6 +80,10 @@ public class Connexion{
 
     public InetAddress getSource() {
         return source;
+    }
+
+    public int getId_branch() {
+        return id_branch;
     }
 
     public String toString() {

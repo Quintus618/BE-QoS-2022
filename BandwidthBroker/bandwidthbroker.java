@@ -1,7 +1,7 @@
 import java.lang.management.ThreadInfo;
 import java.net.InetAddress;
+import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
-
 import com.jcraft.jsch.*;
 
 import java.io.InputStream;
@@ -25,18 +25,10 @@ public class bandwidthbroker{
     private String CE_A;
     private String CE_B;
 
-    private List<InetAddress> ListIP = new ArrayList<InetAddress>();
-    //adresses IP du BB (en theorie une seule, 193.168.1.1)
-    private refreshListIP(){
-        for(Enumeration<NetworkInterface> ListNIC = NetworkInterface.getNetworkInterfaces(); eni.hasMoreElements(); ) {
-            final NetworkInterface NIC = ListNIC.nextElement();
-            if(NIC.isUp()) {
-                for(Enumeration<InetAddress> addrs_NIC = NIC.getInetAddresses(); addrs_NIC.hasMoreElements(); ) {
-                    ListIP.add(addrs_NIC.nextElement());
-                }
-            }
-        }
-    }
+    private int id_branch;
+
+    private static String BB_IP = "193.168.1.1";
+
 
     public bandwidthbroker(){//TODO décommenter
 
@@ -44,7 +36,7 @@ public class bandwidthbroker{
         String TC_A_init = "tc qdisc del dev eth0 root;tc qdisc add dev eth0 root handle 1: htb default 20;tc class add dev eth0 parent 1: classid 1:1 htb rate 1000kbit ceil 1100kbit;tc class add dev eth0 parent 1: classid 1:2 htb rate 2000kbit ceil 2100kbit";
         //1: voix, 2:parasite
         String TC_B_init = "tc qdisc del dev eth0 root;tc qdisc add dev eth0 root handle 1: htb default 20;tc class add dev eth0 parent 1: classid 1:1 htb rate 2000kbit ceil 2100kbit;tc class add dev eth0 parent 1: classid 1:2 htb rate 3000kbit ceil 3100kbit";
-
+        //TODO modifier le default pour le mettre en BestEffort
         
         this.CE_A = "193.168.1.254";
         this.CE_B = "193.168.2.254";
@@ -54,7 +46,7 @@ public class bandwidthbroker{
         askSSH(this.CE_B, TC_B_init);
         //pour plus de clients possible de faire un for avec un dictionnaire associant host et commandes
 
-        //this.refreshListIP();
+        this.id_branch = 0;
 
         //this.listenTCP();
 
@@ -122,13 +114,14 @@ public class bandwidthbroker{
         else if(closeConnection==0){
 
             //Mise à jour du tableau de connexion
-            t_connexion.add(new Connexion(source, receiver, portSource, portRecei, demand, codecs));
+            t_connexion.add(new Connexion(source, receiver, portSource, portRecei, demand, codecs, id_branch));
+            id_branch++;
 
             //Mise à jour des ressources
             for(int i=0;i<SLA_u.length;i++){
                 SLA_u[i]+=demand;
             }
-
+            qdisc_EF_branch_update(True,(int)1000*(float)demand, source, portSource);
             System.out.println("La connexion a été ajoutée.");
         }
         else{
@@ -151,9 +144,29 @@ public class bandwidthbroker{
                 SLA_u[i]-=demand;
             }
 
+            qdisc_EF_branch_update(False,(int)1000*(float)demand, source, portSource);
             System.out.println("La connexion a été supprimée.");
         }
     }
+
+
+    // TODO TODO TODO ----------
+    private qdisc_EF_branch_update(boolean creatrue_removalse, int debit_asked, String ipsource, String portsource, int indice){
+
+        String update_tc = "";
+        if (creatrue_removalse){
+            update_tc="tc filter add dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1;"+Integer.toString(indice);
+        }else{
+            update_tc="tc filter add dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1;"+Integer.toString(indice);
+        }
+
+        askSSH(this.CE_A, update_tc);
+        askSSH(this.CE_B, update_tc);
+        //ATTENTION, plus il y aura de CE plus id_branch augmentera rapidement et risquera d'atteindre intMAX !
+
+        System.out.println("QDisc mis à jour");
+    }
+
 
     // Connexion TCP avec proxy SIP
     //TODO finish
@@ -206,7 +219,7 @@ public class bandwidthbroker{
 
 
     public static void main(String[] args) {
-        bandwidthbroker b = new bandwidthbroker();
+       bandwidthbroker b = new bandwidthbroker();
 
         boolean test = b.checkRessourceUtilization(0.5);
         if(test==true){
@@ -221,7 +234,7 @@ public class bandwidthbroker{
         else{
             System.out.println("Le test a échoué.");
         }
-
+/*
 
         //Cas avec une demande trop grande
         test = b.checkRessourceUtilization(2.0);
@@ -237,6 +250,6 @@ public class bandwidthbroker{
         else{
             System.out.println("C'est normal la demande est trop grande pour un lien");
         }
+        */
     }
-
 }
