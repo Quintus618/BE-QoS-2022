@@ -341,7 +341,6 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
             if (props.getProperty("proxy.interface.1.addr") == null)
             {
                 int index = 1;
-
                 Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
                 while(nets.hasMoreElements())
                 {
@@ -373,7 +372,6 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
             {
                 if (log.isTraceEnabled())
                     log.trace("Configuring interface #"+index+": "+proxyHost);
-                
                 // Get IP address of interface
                 InetAddress inetAddress = InetAddress.getByName(proxyHost);
                 // Get desired port
@@ -769,7 +767,7 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
     {
         Request request = requestEvent.getRequest();
         CallIdHeader callidHeader = (CallIdHeader) request.getHeader(CallIdHeader.NAME);
-
+log.info("processRequest");
         // Place Call-ID header to each log message
         NDC.push(callidHeader != null ? callidHeader.getCallId() : Long.toString(System.currentTimeMillis()));
 
@@ -796,6 +794,7 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
 
     public void processResponse(ResponseEvent responseEvent)
     {
+
         Response response = responseEvent.getResponse();
         CallIdHeader callidHeader = (CallIdHeader) response.getHeader(CallIdHeader.NAME);
 
@@ -848,7 +847,8 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
 
     
     public void processTransactionTerminated(TransactionTerminatedEvent event)
-    {
+    {log.info("ack?");
+
         if (event.isServerTransaction())
             snmpAssistant.decrementSnmpInteger(SNMP_OID_NUM_SERVER_TRANSACTIONS);
         else
@@ -967,7 +967,8 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
      * @throws SipException
      */
     private void processIncomingRequest(final RequestEvent requestEvent) throws InvalidArgumentException, ParseException, SipException
-    {
+    {log.info("processIncomingRequest");
+
         Request request = requestEvent.getRequest();
         SipProvider sipProvider = (SipProvider) requestEvent.getSource();
         ServerTransaction serverTransaction = (operationMode == STATEFULL_MODE ? requestEvent.getServerTransaction() : null);
@@ -1510,6 +1511,7 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
      */
     public boolean validateRequest(Request request, SipProvider sipProvider, ServerTransaction serverTransaction, LocationServiceInterface locationService) throws InvalidArgumentException, SipException, ParseException
     {
+
         /**
          * 16.3 Request Validation
          *
@@ -2315,6 +2317,8 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
      */
     private void processIncomingResponse(ResponseEvent responseEvent) throws InvalidArgumentException, ParseException, SipException
     {
+        log.info("processIncomingResponse");
+
         Response response = responseEvent.getResponse();
         SipProvider sipProvider = (SipProvider) responseEvent.getSource();
         ClientTransaction clientTransaction = (operationMode == STATEFULL_MODE ? responseEvent.getClientTransaction() : null);
@@ -2550,7 +2554,8 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
      * @throws SipException
      */
     private void processResponseStatelessly(Response response, SipProvider sipProvider) throws SipException
-    {
+   {
+    	
         /**
          * Response processing as described in Section 16.7 does not apply to a
          * proxy behaving statelessly.  When a response arrives at a stateless
@@ -2564,12 +2569,19 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
          * any other header field values.  If the address does not match the
          * proxy, the message MUST be silently discarded.
          */
+        if ((((CSeqHeader) response.getHeader(CSeqHeader.NAME)).getMethod()).equals("INVITE")) {
+        	SIPResponse sr = (SIPResponse) response ;
+        	log.info(sr);
+        }
+        
         ListIterator viaList = response.getHeaders(ViaHeader.NAME);
+
         if (viaList != null && viaList.hasNext())
         {
             ViaHeader viaHeader = (ViaHeader) viaList.next();
             String viaHost = viaHeader.getHost();
             int viaPort = viaHeader.getPort();
+
             if (viaPort == -1) viaPort = 5060;
 
             ListeningPoint[] lps = sipProvider.getListeningPoints();
@@ -2589,6 +2601,7 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
                     if (log.isDebugEnabled())
                         log.debug("Response forwarded statelessly.");
 
+
                     if (log.isTraceEnabled())
                         log.trace("\n"+response);
                 }
@@ -2596,7 +2609,7 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
         }
         else if (log.isDebugEnabled())
             log.debug("Via address doesn't match proxy or no Via headers left. Response is dropped.");
-    }
+   }
 
     /**
      * Generates and sends CANCEL requests for all pending client transactions.

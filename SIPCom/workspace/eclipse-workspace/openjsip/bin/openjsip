@@ -123,7 +123,7 @@ service_start()
 				    java -cp $CLASSPATH -Djava.security.policy=policy/policy.all -Djava.rmi.server.codebase="file://$OPENJSIP_REMOTE_LIB file://$JAIN_SIP_API_LIB" openjsip.registrar.Registrar conf/registrar.properties <&- &;;
 
 			proxy)
-	            	java -cp $CLASSPATH -Djava.security.policy=policy/policy.all -Djava.rmi.server.codebase="file://$OPENJSIP_REMOTE_LIB file://$JAIN_SIP_API_LIB" openjsip.proxy.Proxy conf/proxy.properties <&- &;;
+	            	java -cp $CLASSPATH -Djava.security.policy=policy/policy.all -Djava.rmi.server.codebase="file://$OPENJSIP_REMOTE_LIB file://$JAIN_SIP_API_LIB" openjsip.proxy.Proxy conf/proxy.properties #<&- &;;
 		esac
 
         #>> logs/location-service_console.log &
