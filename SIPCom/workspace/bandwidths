@@ -1,0 +1,14 @@
+codecs | sampling rate | bandwidths (kbps)
+==========================
+G722 | 8000 | 82.8
+SILK | 24000 | 24
+SILK | 16000 | 12
+speex | 32000 | 24
+speex | 16000 | 16
+PCMU | 8000 | 82.8
+PCMA | 8000 | 82.8
+iLBC | 8000 | 32
+GSM | 8000 | 14
+speex | 8000 | 8
+DVI4 | 8000 | 32
+DVI4 | 16000 | 32
