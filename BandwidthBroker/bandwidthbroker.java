@@ -36,7 +36,7 @@ public class bandwidthbroker{
         String TC_A_init = "tc qdisc del dev eth0 root;tc qdisc add dev eth0 root handle 1: htb default 20;tc class add dev eth0 parent 1: classid 1:1 htb rate 1000kbit ceil 1100kbit;tc class add dev eth0 parent 1: classid 1:2 htb rate 2000kbit ceil 2100kbit";
         //1: voix, 2:parasite
         String TC_B_init = "tc qdisc del dev eth0 root;tc qdisc add dev eth0 root handle 1: htb default 20;tc class add dev eth0 parent 1: classid 1:1 htb rate 2000kbit ceil 2100kbit;tc class add dev eth0 parent 1: classid 1:2 htb rate 3000kbit ceil 3100kbit";
-        //TODO modifier le default pour le mettre en BestEffort
+        //TODO TODO TODO modifier le default pour le mettre en BestEffort
         
         this.CE_A = "193.168.1.254";
         this.CE_B = "193.168.2.254";
@@ -46,7 +46,7 @@ public class bandwidthbroker{
         askSSH(this.CE_B, TC_B_init);
         //pour plus de clients possible de faire un for avec un dictionnaire associant host et commandes
 
-        this.id_branch = 0;
+        this.id_branch = 1;
 
         //this.listenTCP();
 
@@ -151,13 +151,15 @@ public class bandwidthbroker{
 
 
     // TODO TODO TODO ----------
-    private qdisc_EF_branch_update(boolean creatrue_removalse, int debit_asked, String ipsource, String portsource, int indice){
+    private void qdisc_EF_branch_update(boolean creatrue_removalse, int debit_asked, String ipsource, String portsource, int indice){
 
         String update_tc = "";
         if (creatrue_removalse){
-            update_tc="tc filter add dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1;"+Integer.toString(indice);
+            //TODO 
+            update_tc="tc class add dev eth0 parent 1:1 classid 1:"+Integer.toString(indice)+" htb rate "+Integer.toString(debit_asked)+"kbit ceil "+Integer.toString(debit_asked)+"kbit";
+            update_tc=update_tc+";tc filter add dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1;"+Integer.toString(indice);
         }else{
-            update_tc="tc filter add dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1;"+Integer.toString(indice);
+            update_tc="tc class del dev eth0 classid 1:"+"truc???????";
         }
 
         askSSH(this.CE_A, update_tc);
@@ -171,7 +173,7 @@ public class bandwidthbroker{
     // Connexion TCP avec proxy SIP
     //TODO finish
     // Pierre
-    private listenTCP(){
+    private void listenTCP(){
         try (ServerSocket servSock = new ServerSocket(listening_port)) {
     
             System.out.println("Attente de connexion sur le port " + listening_port);
@@ -220,7 +222,7 @@ public class bandwidthbroker{
 
     public static void main(String[] args) {
        bandwidthbroker b = new bandwidthbroker();
-
+/*
         boolean test = b.checkRessourceUtilization(0.5);
         if(test==true){
             InetAddress address1 = InetAddress.getLoopbackAddress();
@@ -234,7 +236,6 @@ public class bandwidthbroker{
         else{
             System.out.println("Le test a échoué.");
         }
-/*
 
         //Cas avec une demande trop grande
         test = b.checkRessourceUtilization(2.0);
