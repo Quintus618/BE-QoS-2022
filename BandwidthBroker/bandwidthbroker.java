@@ -8,6 +8,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
+//classes locales
+import Connexion.java;
+import ThreadTCP.java;
+
 public class bandwidthbroker{
 
     // Premier élément SLA_A->Réseau de coeur
@@ -20,7 +24,7 @@ public class bandwidthbroker{
     // Tableau récapitulatif des connexions établies
     private ArrayList<Connexion> t_connexion = new ArrayList<Connexion>();
 
-    private int listening_port = 12121;//TODO se mettre d'accord avec le SIP
+    private int listening_port = 12121;//se mettre d'accord avec le SIP avant tout changement
 
     private String CE_A;
     private String CE_B;
@@ -30,7 +34,7 @@ public class bandwidthbroker{
     private static String BB_IP = "193.168.1.1";
 
 
-    public bandwidthbroker(){//TODO décommenter
+    public bandwidthbroker(){
 
         //initialisation des tc avec les SLAs
         String TC_A_init = "tc qdisc del dev eth0 root;tc qdisc add dev eth0 root handle 1: htb default 20;tc class add dev eth0 parent 1: classid 1:1 htb rate 1000kbit ceil 1100kbit;tc class add dev eth0 parent 1: classid 1:2 htb rate 2000kbit ceil 2100kbit;tc filter add dev eth0 parent 1: protocol ip prio 1 handle 20 fw flowid 1:2";
@@ -46,7 +50,7 @@ public class bandwidthbroker{
 
         this.id_branch = 1;
 
-        //this.listenTCP();
+        //this.listenTCP();//TODO décommenter
 
 
     }
@@ -104,15 +108,16 @@ public class bandwidthbroker{
 
     // Si connexion autorisée / fermée mise à jour de la table des connexions et utilisation des ressources
     // Quentin
-    private void updateRessourcesConnexions(InetAddress source, InetAddress receiver, int portSource, int portRecei, String[] codecs, double demand, int closeConnection){
-
+    //TODO TODO: mutex pour ne pas que plusieurs threadTCP puissent edit en même temps! (à faire dans threadTCP?)
+    public boolean updateRessourcesConnexions(InetAddress source, InetAddress receiver, int portSource, int portRecei, double demand, boolean closeConnection){
+        boolean retour = False;
         if(demand <=0){
             System.out.println("Erreur: La demande est négative");
         }
-        else if(closeConnection==0){
+        else if(!closeConnection){
 
             //Mise à jour du tableau de connexion
-            t_connexion.add(new Connexion(source, receiver, portSource, portRecei, demand, codecs, id_branch));
+            t_connexion.add(new Connexion(source, receiver, portSource, portRecei, demand, id_branch));
             id_branch++;
 
             //Mise à jour des ressources
@@ -121,6 +126,7 @@ public class bandwidthbroker{
             }
             qdisc_EF_branch_update(True,(int)1000*(float)demand, source, portSource, id_branch-1);
             System.out.println("La connexion a été ajoutée.");
+            retour = True;
         }
         else{
 
@@ -148,6 +154,8 @@ public class bandwidthbroker{
             qdisc_EF_branch_update(False,(int)1000*(float)demand, source, portSource,id);
             System.out.println("La connexion a été supprimée.");
         }
+
+        return retour;//à utiliser par la communication TCP
     }
 
 
@@ -184,7 +192,7 @@ public class bandwidthbroker{
                 Socket socket = servSock.accept();
                 System.out.println("Connexion d'un client TCP");
 
-                new ThreadTCP(socket).start();
+                new ThreadTCP(socket, this).start();//surtout pas run, start fait le parallelisme
             }
 
         } catch (IOException ex) {
@@ -197,7 +205,7 @@ public class bandwidthbroker{
     //TODO
     //Quentin
     private String[] parseString(){
-        String[] parse = new String[6];   //@IPsrc , @IPdest, portsrc, portdest, codec, bandwidth
+        String[] parse = new String[5];   //@IPsrc , @IPdest, portsrc, portdest, bandwidth
 
         return parse;
     }
@@ -209,7 +217,7 @@ public class bandwidthbroker{
     private void printConnexionTable(){
 
         //Afficher la table des connexion;
-        System.out.println("SOURCE       RECEIVER       PORTSOURCE    PORTRECE    BANDWIDTH(Mbps)       CODECS");
+        System.out.println("SOURCE       RECEIVER       PORTSOURCE    PORTRECE    BANDWIDTH(Mbps)       ");
         for(Connexion c : t_connexion){
             c.toString();
             System.out.println(c);
@@ -229,10 +237,9 @@ public class bandwidthbroker{
         if(test==true){
             InetAddress address1 = InetAddress.getLoopbackAddress();
             InetAddress address2 = InetAddress.getLoopbackAddress();
-            String[] codec = {"toto", "tata"};
-            b.updateRessourcesConnexions(address1, address2, 6666, 7777, codec, 0.5, 0);
+            b.updateRessourcesConnexions(address1, address2, 6666, 7777, 0.5, 0);
             b.printConnexionTable();
-            b.updateRessourcesConnexions(address1, address2, 6666, 7777, codec, 0.5, 1);
+            b.updateRessourcesConnexions(address1, address2, 6666, 7777, 0.5, 1);
             b.printConnexionTable();
         }
         else{
@@ -244,10 +251,9 @@ public class bandwidthbroker{
         if(test==true){
             InetAddress address1 = InetAddress.getLoopbackAddress();
             InetAddress address2 = InetAddress.getLoopbackAddress();
-            String[] codec = {"toto", "tata"};
-            b.updateRessourcesConnexions(address1, address2, 6666, 7777, codec, 2.0, 0);
+            b.updateRessourcesConnexions(address1, address2, 6666, 7777, 2.0, 0);
             b.printConnexionTable();
-            b.updateRessourcesConnexions(address1, address2, 6666, 7777, codec, 0.5, 1);
+            b.updateRessourcesConnexions(address1, address2, 6666, 7777, 0.5, 1);
             b.printConnexionTable();
         }
         else{

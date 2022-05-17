@@ -1,11 +1,16 @@
 import java.io.*;
 import java.net.*;
+import java.net.InetAddress;
+
+import bandwidthbroker.java;
  
 public class ThreadTCP extends Thread {
     private Socket socket;
+    private bandwidthbroker BB;
  
-    public ServerThread(Socket socket) {
+    public ThreadTCP(Socket socket, bandwidthbroker BB) {
         this.socket = socket;
+        this.BB=BB;
     }
  
     public void run() {
@@ -18,20 +23,33 @@ public class ThreadTCP extends Thread {
  
  
             String text;
+            Boolean answered = false;
  
             do {
                 //texte envoyé par le client lu par le serveur
                 text = reader.readLine();
-
-                //TODO
-
+                String[] tab = text.split("-");
+                //TODO TODO
+                //TODO exclusion mutuelle des threads
                 //texte renvoyé au client
-                writer.println("trucs");
+                //InetAddress source, InetAddress receiver, int portSource, int portRecei, double demand, boolean closeConnection
+                if (tab.length==6){
+                    if (BB.updateRessourcesConnexions(InetAddress.getByName(tab[0]), InetAddress.getByName(tab[1]), Integer.valueOf(tab[2]), Integer.valueOf(tab[3]), Double.valueOf(tab[4]), Boolean.valueOf(tab[5]))){
+                        writer.println("OK");
+                    }else{
+                        writer.println("NOK");
+                    }
+                    answered = True;
+                }else if (tab.length!=0){
+                    System.out.println("WARNING : message reçu du proxy SIP de format invalide");
+                }
  
-            } while (!text.equals("END"));//TODO modifier
+            } while (!answered);//TODO modifier
  
             socket.close();
-        } catch (IOException ex) {
+            Thread.currentThread.interrupt();
+
+        } catch (Exception ex) {
             System.out.println("Exception (thread serveur): " + ex.getMessage());
             ex.printStackTrace();
         }

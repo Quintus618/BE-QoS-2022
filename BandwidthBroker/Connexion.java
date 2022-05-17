@@ -8,18 +8,16 @@ public class Connexion{
     private int portSource;
     private int portReceiver;
     private double bandWidth;
-    private String[] codecs;
     private int id_branch;
 
-    public Connexion(InetAddress source, InetAddress receiver, int portSource, int portRecei, double bandWidth, String[] codecs, int id_branch){
+    public Connexion(InetAddress source, InetAddress receiver, int portSource, int portRecei, double bandWidth, int id_branch){
         this.source = source;
         this.receiver = receiver;
         this.portSource = portSource;
         this.portReceiver = portRecei;
         this.bandWidth = bandWidth;
-        this.codecs = new String[codecs.length];
         this.id_branch = id_branch;
-        System.arraycopy(codecs, 0, this.codecs, 0, this.codecs.length);
+        //codecs non retenus car inutiles à connaître par le BB
     }
 
 /*
@@ -44,10 +42,6 @@ public class Connexion{
         this.portReceiver = portReceiver;
     }
 
-    public void setCodecs(String[] codecs) {
-        this.codecs = codecs;
-    }
-
     public void setBandWidth(int bandWidth) {
         this.bandWidth = bandWidth;
     }
@@ -60,10 +54,6 @@ public class Connexion{
 
     public double getBandWidth() {
         return bandWidth;
-    }
-
-    public String[] getCodecs() {
-        return codecs;
     }
 
     public int getPortReceiver() {
@@ -88,7 +78,7 @@ public class Connexion{
 
     public String toString() {
         return source.getHostAddress() + "       " + receiver.getHostAddress() + "       "
-        + portSource + "       " + portReceiver + "       " + bandWidth + "                 " + Arrays.toString(codecs);
+        + portSource + "       " + portReceiver + "       " + bandWidth + "                 ";
     }
 
 }
