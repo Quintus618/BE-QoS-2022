@@ -1,6 +1,5 @@
 import java.lang.management.ThreadInfo;
 import java.net.InetAddress;
-import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 import com.jcraft.jsch.*;
 
@@ -44,8 +43,8 @@ public class bandwidthbroker{
         this.CE_A = "193.168.1.254";
         this.CE_B = "193.168.2.254";
 
-        askSSH(this.CE_A, TC_A_init);
-        askSSH(this.CE_B, TC_B_init);
+        //askSSH(this.CE_A, TC_A_init);
+        //askSSH(this.CE_B, TC_B_init);//TODO décommenter
         //pour plus de clients possible de faire un for avec un dictionnaire associant host et commandes
 
         this.id_branch = 1;
@@ -110,7 +109,7 @@ public class bandwidthbroker{
     // Quentin
     //TODO TODO: mutex pour ne pas que plusieurs threadTCP puissent edit en même temps! (à faire dans threadTCP?)
     public synchronized boolean updateRessourcesConnexions(InetAddress source, InetAddress receiver, int portSource, int portRecei, double demand, boolean closeConnection){
-        boolean retour = False;
+        boolean retour = false;
         if(demand <=0){
             System.out.println("Erreur: La demande est négative");
         }
@@ -124,9 +123,9 @@ public class bandwidthbroker{
             for(int i=0;i<SLA_u.length;i++){
                 SLA_u[i]+=demand;
             }
-            qdisc_EF_branch_update(True,(int)1000*(float)demand, source, portSource, id_branch-1);
+            qdisc_EF_branch_update(true,(int)1000*(float)demand, source, portSource, id_branch-1);
             System.out.println("La connexion a été ajoutée.");
-            retour = True;
+            retour = true;
         }
         else{
 
@@ -151,7 +150,7 @@ public class bandwidthbroker{
                 SLA_u[i]-=demand;
             }
 
-            qdisc_EF_branch_update(False,(int)1000*(float)demand, source, portSource,id);
+            qdisc_EF_branch_update(false,(int)1000*(float)demand, source, portSource,id);
             System.out.println("La connexion a été supprimée.");
         }
 
@@ -159,7 +158,7 @@ public class bandwidthbroker{
     }
 
 
-    private void qdisc_EF_branch_update(boolean creatrue_removalse, int debit_asked, String ipsource, String portsource, int indice){
+    private void qdisc_EF_branch_update(boolean creatrue_removalse, int debit_asked, String ipsource, int portsource, int indice){
        String update_tc = "";
        String indc=Integer.toString(indice+10);//on incrémente de 10 pour être sûr qu'il n'y ait pas d'interférences avec 1:2 qui est le best effort, vérifier le fonctionnement de tc
         if (creatrue_removalse){
