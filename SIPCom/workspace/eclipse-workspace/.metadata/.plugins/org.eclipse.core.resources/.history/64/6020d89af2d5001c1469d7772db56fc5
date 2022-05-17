@@ -205,7 +205,6 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
         TCP_client cli;
         cli = new TCP_client();
         cli.start();
-        System.out.println("message envoyé");
     	
     	Properties props = null;
 

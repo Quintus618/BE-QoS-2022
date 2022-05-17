@@ -37,8 +37,6 @@ public class TCP_client extends Thread {
 	}
 	
 	public void run() {
-		String msg = "Coucou, moi c'est Bobby !";
-		this.pw.println(msg);
-		System.out.println("message envoyé : "+msg);
+		
 	}
 }
