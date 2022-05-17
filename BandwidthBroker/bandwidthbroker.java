@@ -109,7 +109,7 @@ public class bandwidthbroker{
     // Si connexion autorisée / fermée mise à jour de la table des connexions et utilisation des ressources
     // Quentin
     //TODO TODO: mutex pour ne pas que plusieurs threadTCP puissent edit en même temps! (à faire dans threadTCP?)
-    public boolean updateRessourcesConnexions(InetAddress source, InetAddress receiver, int portSource, int portRecei, double demand, boolean closeConnection){
+    public synchronized boolean updateRessourcesConnexions(InetAddress source, InetAddress receiver, int portSource, int portRecei, double demand, boolean closeConnection){
         boolean retour = False;
         if(demand <=0){
             System.out.println("Erreur: La demande est négative");
