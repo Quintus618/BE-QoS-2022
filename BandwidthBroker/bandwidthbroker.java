@@ -37,6 +37,7 @@ public class bandwidthbroker{
         //1: voix, 2:parasite
         String TC_B_init = "tc qdisc del dev eth0 root;tc qdisc add dev eth0 root handle 1: htb default 20;tc class add dev eth0 parent 1: classid 1:1 htb rate 2000kbit ceil 2100kbit;tc class add dev eth0 parent 1: classid 1:2 htb rate 3000kbit ceil 3100kbit";
         //TODO TODO TODO modifier le default pour le mettre en BestEffort
+        //ou créer la branche avec un handle de 20?
         
         this.CE_A = "193.168.1.254";
         this.CE_B = "193.168.2.254";
@@ -121,16 +122,19 @@ public class bandwidthbroker{
             for(int i=0;i<SLA_u.length;i++){
                 SLA_u[i]+=demand;
             }
-            qdisc_EF_branch_update(True,(int)1000*(float)demand, source, portSource);
+            qdisc_EF_branch_update(True,(int)1000*(float)demand, source, portSource, id_branch-1);
             System.out.println("La connexion a été ajoutée.");
         }
         else{
 
             //Mise à jour du tableau de connexions
             int index = 0;
+            int id = 0;
             boolean trouve = false;
             while (index <= t_connexion.size() && trouve==false){
+                //possible de remplacer tout ça par une vérification de l'id_branch?
                 if(t_connexion.get(index).getSource().equals(source) && t_connexion.get(index).getReceiver().equals(receiver) && t_connexion.get(index).getPortSource()==portSource && t_connexion.get(index).getPortReceiver()== portRecei){
+                    id=t_connexion.get(index).getId_branch();
                     t_connexion.remove(index);
                     trouve=true;
                 }
@@ -144,22 +148,23 @@ public class bandwidthbroker{
                 SLA_u[i]-=demand;
             }
 
-            qdisc_EF_branch_update(False,(int)1000*(float)demand, source, portSource);
+            qdisc_EF_branch_update(False,(int)1000*(float)demand, source, portSource,id);
             System.out.println("La connexion a été supprimée.");
         }
     }
 
 
-    // TODO TODO TODO ----------
+    // TODO warning: le numéro d'indice doit être le bon pour la suppression!
     private void qdisc_EF_branch_update(boolean creatrue_removalse, int debit_asked, String ipsource, String portsource, int indice){
-
-        String update_tc = "";
+       String update_tc = "";
         if (creatrue_removalse){
-            //TODO 
-            update_tc="tc class add dev eth0 parent 1:1 classid 1:"+Integer.toString(indice)+" htb rate "+Integer.toString(debit_asked)+"kbit ceil "+Integer.toString(debit_asked)+"kbit";
-            update_tc=update_tc+";tc filter add dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1;"+Integer.toString(indice);
-        }else{
-            update_tc="tc class del dev eth0 classid 1:"+"truc???????";
+            String dba=Integer.toString(debit_asked);        
+            update_tc = "tc class add dev eth0 parent 1:1 classid 1:"+Integer.toString(indice)+" htb rate "+dba+"kbit ceil "+dba+"kbit";
+            update_tc = update_tc+";tc filter add dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1:"+Integer.toString(indice);
+       
+        }else{//note: il est obligatoire de del tous les filters et classes filles avant de supprimer une classe
+            update_tc = "tc filter del dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1:"+Integer.toString(indice);
+            update_tc = update_tc+";tc class del dev eth0 classid 1:"+Integer.toString(indice);
         }
 
         askSSH(this.CE_A, update_tc);
