@@ -33,16 +33,13 @@ public class bandwidthbroker{
     public bandwidthbroker(){//TODO décommenter
 
         //initialisation des tc avec les SLAs
-        String TC_A_init = "tc qdisc del dev eth0 root;tc qdisc add dev eth0 root handle 1: htb default 20;tc class add dev eth0 parent 1: classid 1:1 htb rate 1000kbit ceil 1100kbit;tc class add dev eth0 parent 1: classid 1:2 htb rate 2000kbit ceil 2100kbit";
-        //1: voix, 2:parasite
-        String TC_B_init = "tc qdisc del dev eth0 root;tc qdisc add dev eth0 root handle 1: htb default 20;tc class add dev eth0 parent 1: classid 1:1 htb rate 2000kbit ceil 2100kbit;tc class add dev eth0 parent 1: classid 1:2 htb rate 3000kbit ceil 3100kbit";
-        //TODO TODO TODO modifier le default pour le mettre en BestEffort
-        //ou créer la branche avec un handle de 20?
-        
+        String TC_A_init = "tc qdisc del dev eth0 root;tc qdisc add dev eth0 root handle 1: htb default 20;tc class add dev eth0 parent 1: classid 1:1 htb rate 1000kbit ceil 1100kbit;tc class add dev eth0 parent 1: classid 1:2 htb rate 2000kbit ceil 2100kbit;tc filter add dev eth0 parent 1: protocol ip prio 1 handle 20 fw flowid 1:2";
+        //1: voix, 2:parasite ->handle 20 va en parasite?
+        String TC_B_init = "tc qdisc del dev eth0 root;tc qdisc add dev eth0 root handle 1: htb default 20;tc class add dev eth0 parent 1: classid 1:1 htb rate 2000kbit ceil 2100kbit;tc class add dev eth0 parent 1: classid 1:2 htb rate 3000kbit ceil 3100kbit;tc filter add dev eth0 parent 1: protocol ip prio 1 handle 20 fw flowid 1:2";
+              
         this.CE_A = "193.168.1.254";
         this.CE_B = "193.168.2.254";
 
-        
         askSSH(this.CE_A, TC_A_init);
         askSSH(this.CE_B, TC_B_init);
         //pour plus de clients possible de faire un for avec un dictionnaire associant host et commandes
@@ -154,17 +151,17 @@ public class bandwidthbroker{
     }
 
 
-    // TODO warning: le numéro d'indice doit être le bon pour la suppression!
     private void qdisc_EF_branch_update(boolean creatrue_removalse, int debit_asked, String ipsource, String portsource, int indice){
        String update_tc = "";
+       String indc=Integer.toString(indice+10);//on incrémente de 10 pour être sûr qu'il n'y ait pas d'interférences avec 1:2 qui est le best effort, vérifier le fonctionnement de tc
         if (creatrue_removalse){
             String dba=Integer.toString(debit_asked);        
-            update_tc = "tc class add dev eth0 parent 1:1 classid 1:"+Integer.toString(indice)+" htb rate "+dba+"kbit ceil "+dba+"kbit";
-            update_tc = update_tc+";tc filter add dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1:"+Integer.toString(indice);
+            update_tc = "tc class add dev eth0 parent 1:1 classid 1:"+indc+" htb rate "+dba+"kbit ceil "+dba+"kbit";
+            update_tc = update_tc+";tc filter add dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1:"+indc;
        
         }else{//note: il est obligatoire de del tous les filters et classes filles avant de supprimer une classe
-            update_tc = "tc filter del dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1:"+Integer.toString(indice);
-            update_tc = update_tc+";tc class del dev eth0 classid 1:"+Integer.toString(indice);
+            update_tc = "tc filter del dev eth0 parent 1:1 protocol ip prio 1 u32 match ip src "+ipsource+"/32 match ip dport "+Integer.toString(portsource)+" 0xffff flowid 1:"+indc;
+            update_tc = update_tc+";tc class del dev eth0 classid 1:"+indc;
         }
 
         askSSH(this.CE_A, update_tc);
