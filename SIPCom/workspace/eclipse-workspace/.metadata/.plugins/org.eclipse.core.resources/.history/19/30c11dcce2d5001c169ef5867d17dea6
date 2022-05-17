@@ -1,0 +1,11 @@
+package openjsip.proxy;
+
+import java.io.*;
+import java.net.*;
+
+public class tcp_client extends Thread {
+	
+	public tcp_client() {
+		
+	}
+}

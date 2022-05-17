@@ -202,7 +202,9 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
      */
     public static void main(String[] args)
     {
-        Properties props = null;
+        TCP_client cli;
+    	
+    	Properties props = null;
 
         if (args.length < 1)
         {

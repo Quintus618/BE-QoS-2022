@@ -1,7 +1,7 @@
 eclipse.preferences.version=1
 org.eclipse.jdt.core.classpathVariable.ECLIPSE_HOME=/home/migaud/programmes/eclipse/eclipse/
-org.eclipse.jdt.core.classpathVariable.JRE_LIB=/home/migaud/programmes/eclipse/eclipse/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.linux.x86_64_16.0.2.v20210721-1149/jre/lib/jrt-fs.jar
-org.eclipse.jdt.core.classpathVariable.JRE_SRC=/home/migaud/programmes/eclipse/eclipse/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.linux.x86_64_16.0.2.v20210721-1149/jre/lib/src.zip
+org.eclipse.jdt.core.classpathVariable.JRE_LIB=/usr/lib/jvm/jdk-18/lib/jrt-fs.jar
+org.eclipse.jdt.core.classpathVariable.JRE_SRC=/usr/lib/jvm/jdk-18/lib/src.zip
 org.eclipse.jdt.core.classpathVariable.JRE_SRCROOT=
 org.eclipse.jdt.core.classpathVariable.JUNIT_HOME=/home/migaud/programmes/eclipse/eclipse/plugins/org.junit_4.13.0.v20200204-1500.jar
 org.eclipse.jdt.core.classpathVariable.M2_REPO=/home/migaud/.m2/repository
