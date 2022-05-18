@@ -28,19 +28,28 @@ public class ThreadTCP extends Thread {
             do {
                 //texte envoyé par le client lu par le serveur
                 text = reader.readLine();
-                String[] tab = text.split("-");
+                String[] tab = text.split(",");
                 //TODO TODO
                 //TODO exclusion mutuelle des threads
                 //texte renvoyé au client
-                //InetAddress source, InetAddress receiver, int portSource, int portRecei, double demand, boolean closeConnection
-                if (tab.length==6){
-                    if (BB.updateRessourcesConnexions(InetAddress.getByName(tab[0]), InetAddress.getByName(tab[1]), Integer.valueOf(tab[2]), Integer.valueOf(tab[3]), Double.valueOf(tab[4]), Boolean.valueOf(tab[5]))){
+                //InetAddress source, InetAddress receiver, int portSource, int portRecei, double demand
+                if (tab.length==5){
+                    boolean test = BB.checkRessourceUtilization(Double.parseDouble(tab[4]));
+                    if (BB.addRessourcesConnexions(InetAddress.getByName(tab[0]), InetAddress.getByName(tab[1]), Integer.valueOf(tab[2]), Integer.valueOf(tab[3]), Double.valueOf(tab[4])) && test){
                         writer.println("OK");
                     }else{
                         writer.println("NOK");
                     }
                     answered = True;
-                }else if (tab.length!=0){
+                }else if (tab.length==2){
+                    if (BB.RemoveRessourcesConnexions(InetAddress.getByName(tab[0]), Integer.valueOf(tab[1]))){
+                        writer.println("OK");
+                    }else{
+                        writer.println("NOK");
+                    }
+                    answered = True;
+                }
+                else{
                     System.out.println("WARNING : message reçu du proxy SIP de format invalide");
                 }
  
