@@ -3,3 +3,8 @@
     <artifactId>jsch</artifactId>
     <version>0.1.55</version>
 </dependency>
+
+iptables -t mangle -A FORWARD -p udp --dport xxxx -j DSCP --set-dscp-class EF
+//note: pas que du Forward mais aussi du OUTPUT si jamais on risque d'utiliser la même machine pour faire BB et appelant
+
+TODO:attendre un ack avant d'enregistrer dans t_connexion
