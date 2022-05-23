@@ -7,14 +7,17 @@ public class TCP_client extends Thread {
 	
 	private int port;
 	private String dest;
-	private byte [] addr;
+	private byte [] addr = new byte[4];
 	private Socket socket;
 	private OutputStream output;
 	private PrintWriter pw;
 	private InputStream input;
 	private BufferedReader br;
+	private String msg = null;
+	private volatile String response = null;
 	
-	public TCP_client() {
+	public TCP_client(String msg) {
+		this.msg = msg;
 		this.port = 12121;
 		this.addr[0] = (byte) 193;
 		this.addr[1] = (byte) 168;
@@ -28,6 +31,7 @@ public class TCP_client extends Thread {
 				this.pw = new PrintWriter(this.output, true);
 				this.input = this.socket.getInputStream();
 				this.br = new BufferedReader(new InputStreamReader(this.input));
+				this.start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -36,9 +40,21 @@ public class TCP_client extends Thread {
 		}
 	}
 	
+	public String get_resp() {
+		return this.response;
+	}
+	
 	public void run() {
-		String msg = "Coucou, moi c'est Bobby !";
-		this.pw.println(msg);
-		System.out.println("message envoyé : "+msg);
+		this.pw.println(this.msg);
+		try {
+			this.response = this.br.readLine();
+			try {
+				sleep(2000);
+			} catch (InterruptedException i) {
+				i.printStackTrace();
+			}
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

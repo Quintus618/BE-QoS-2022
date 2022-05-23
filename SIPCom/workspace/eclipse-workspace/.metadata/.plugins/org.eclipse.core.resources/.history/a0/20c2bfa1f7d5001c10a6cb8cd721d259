@@ -1,0 +1,44 @@
+package openjsip.proxy;
+
+import java.io.*;
+import java.net.*;
+
+public class TCP_client extends Thread {
+	
+	private int port;
+	private String dest;
+	private byte [4] addr;
+	private Socket socket;
+	private OutputStream output;
+	private PrintWriter pw;
+	private InputStream input;
+	private BufferedReader br;
+	
+	public TCP_client() {
+		this.port = 12121;
+		this.addr[0] = (byte) 193;
+		this.addr[1] = (byte) 168;
+		this.addr[2] = (byte) 1;
+		this.addr[3] = (byte) 1;
+		try {
+			InetAddress dest = InetAddress.getByAddress(this.addr);
+			try {
+				this.socket = new Socket(dest, this.port);
+				this.output = this.socket.getOutputStream();
+				this.pw = new PrintWriter(this.output, true);
+				this.input = this.socket.getInputStream();
+				this.br = new BufferedReader(new InputStreamReader(this.input));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (UnknownHostException h) {
+			h.printStackTrace();
+		}
+	}
+	
+	public void run() {
+		String msg = "Coucou, moi c'est Bobby !";
+		this.pw.println(msg);
+		System.out.println("message envoyé : "+msg);
+	}
+}
