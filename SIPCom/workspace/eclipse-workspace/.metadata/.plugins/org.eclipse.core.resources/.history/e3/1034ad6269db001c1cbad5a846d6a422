@@ -45,4 +45,8 @@ public class TCP_client {
 		this.sender = new TCP_send(this.pw, this.br, msg);
 		this.sender.start();
 	}
+	
+	public void run() {
+		
+	}
 }
