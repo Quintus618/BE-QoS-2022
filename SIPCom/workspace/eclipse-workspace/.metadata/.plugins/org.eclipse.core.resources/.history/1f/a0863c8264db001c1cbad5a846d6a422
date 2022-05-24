@@ -1,0 +1,12 @@
+package openjsip.proxy;
+
+import java.io.*;
+import java.net.*;
+
+public class TCP_send {
+
+	public TCP_send(Socket soc, PrintWriter pw, BufferedReader br) {
+		
+	}
+	
+}

@@ -6,6 +6,7 @@ import java.net.*;
 public class TCP_client extends Thread {
 	
 	private int port;
+	private String dest;
 	private byte [] addr = new byte[4];
 	private Socket socket;
 	private OutputStream output;
@@ -38,12 +39,15 @@ public class TCP_client extends Thread {
 	}
 	
 	public String get_resp() {
-		return this.sender.get_resp();
+		return this.resp;
 	}
 	
 	public void send(String msg) {
 		this.sender = new TCP_send(this.pw, this.br, msg);
 		this.sender.start();
+		if (!this.sender.get_resp().matches(null)) {
+			this.resp = this.sender.get_resp();
+		}
 	}
 	
 	public void run() {

@@ -38,12 +38,15 @@ public class TCP_client extends Thread {
 	}
 	
 	public String get_resp() {
-		return this.sender.get_resp();
+		return this.resp;
 	}
 	
 	public void send(String msg) {
 		this.sender = new TCP_send(this.pw, this.br, msg);
 		this.sender.start();
+		if (!this.sender.get_resp().matches(null)) {
+			this.resp = this.sender.get_resp();
+		}
 	}
 	
 	public void run() {

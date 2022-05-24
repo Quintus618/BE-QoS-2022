@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename field &apos;response&apos; in &apos;openjsip.proxy.TCP_client&apos; to &apos;resp&apos;&#x0A;- Original project: &apos;openjsip&apos;&#x0A;- Original element: &apos;openjsip.proxy.TCP_client.response&apos;&#x0A;- Renamed element: &apos;openjsip.proxy.TCP_client.resp&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" delegate="false" deprecate="false" description="Rename field &apos;response&apos;" flags="589826" getter="false" id="org.eclipse.jdt.ui.rename.field" input="/src&lt;openjsip.proxy{TCP_client.java[TCP_client^response" name="resp" references="true" setter="false" stamp="1653399241044" textual="false" version="1.0"/>
+</session>

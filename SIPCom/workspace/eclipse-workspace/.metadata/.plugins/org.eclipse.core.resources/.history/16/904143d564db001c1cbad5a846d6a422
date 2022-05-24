@@ -1,0 +1,18 @@
+package openjsip.proxy;
+
+import java.io.*;
+import java.net.*;
+
+public class TCP_send extends Thread {
+
+	private Socket socket;
+	private PrintWriter pw;
+	private BufferedReader br;
+	
+	public TCP_send(Socket soc, PrintWriter pw, BufferedReader br) {
+		this.socket = soc;
+		this.pw = pw;
+		this.br = br;
+	}
+	
+}

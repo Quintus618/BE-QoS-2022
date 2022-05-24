@@ -44,6 +44,7 @@ public class TCP_client extends Thread {
 	public void send(String msg) {
 		this.sender = new TCP_send(this.pw, this.br, msg);
 		this.sender.start();
+		}
 	}
 	
 	public void run() {
