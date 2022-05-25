@@ -3,8 +3,8 @@ package openjsip.proxy;
 import java.io.*;
 import java.net.*;
 
-public class TCP_client {
-	
+public class test_rcv {
+
 	private int port;
 	private byte [] addr = new byte[4];
 	private Socket socket;
@@ -15,7 +15,7 @@ public class TCP_client {
 	private volatile String resp = null;
 	private TCP_send sender;
 	
-	public TCP_client() {
+	public test_rcv() {
 		this.port = 12121;
 		this.addr[0] = (byte) 193;
 		this.addr[1] = (byte) 168;
@@ -37,13 +37,4 @@ public class TCP_client {
 		}
 	}
 	
-	public String send(String msg) {
-		this.pw.println(msg);
-		try {
-			this.resp = this.br.readLine();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		return this.resp;
-	}
 }

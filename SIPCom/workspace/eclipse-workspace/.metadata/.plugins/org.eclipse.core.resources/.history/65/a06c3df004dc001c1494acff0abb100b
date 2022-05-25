@@ -24,11 +24,11 @@ public class TCP_send extends Thread {
 		this.pw.println(this.msg);
 		try {
 			this.resp = this.br.readLine();
-//			try {
-//				sleep(2000);
-//			} catch (InterruptedException i) {
-//				i.printStackTrace();
-//			}
+			try {
+				sleep(2000);
+			} catch (InterruptedException i) {
+				i.printStackTrace();
+			}
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

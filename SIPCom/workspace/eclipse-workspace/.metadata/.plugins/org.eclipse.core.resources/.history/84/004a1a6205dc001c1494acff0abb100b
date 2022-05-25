@@ -3,16 +3,17 @@ package openjsip.proxy;
 import java.io.*;
 import java.net.*;
 
-public class TCP_client extends Thread {
+public class TCP_client {
 	
 	private int port;
-	private String dest;
-	private byte [] addr;
+	private byte [] addr = new byte[4];
 	private Socket socket;
 	private OutputStream output;
 	private PrintWriter pw;
 	private InputStream input;
 	private BufferedReader br;
+	private volatile String resp = null;
+	private TCP_send sender;
 	
 	public TCP_client() {
 		this.port = 12121;
@@ -36,7 +37,19 @@ public class TCP_client extends Thread {
 		}
 	}
 	
-	public void run() {
-		
+	public String get_resp() {
+		String result = this.sender.get_resp();
+		return result;
+	}
+	
+	public void send(String msg) {
+		//this.sender = new TCP_send(this.pw, this.br, msg);
+		//this.sender.start();
+		this.pw.println(msg);
+		try {
+			this.resp = this.br.readLine();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
