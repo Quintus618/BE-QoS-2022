@@ -1,0 +1,41 @@
+ SIP/2.0 200 OK
+To: <sip:user2@193.168.1.2>;tag=58714164
+Via: SIP/2.0/UDP 193.168.1.3:5060;branch=z9hG4bK-373233-4e6ceca00650d711e0906af8b65b59a8
+Record-Route: <sip:193.168.1.2:5060>;lr
+CSeq: 1 INVITE
+Call-ID: da4456f119a5417cc17ece2d066f9f4d@0:0:0:0:0:0:0:0
+From: "user1" <sip:user1@193.168.1.2>;tag=720cf3a7
+Contact: "user2" <sip:user2@193.168.2.1:5060;transport=udp;registering_acc=193_168_1_2>
+User-Agent: Jitsi1.0-build.3967Linux
+Content-Type: application/sdp
+Content-Length: 788
+
+v=0
+o=user2 0 0 IN IP4 193.168.2.1
+s=-
+c=IN IP4 193.168.2.1
+t=0 0
+m=audio 5056 RTP/AVP 9 96 97 98 100 0 8 102 3 103 5 6 101
+a=rtpmap:9 G722/8000
+a=rtpmap:96 SILK/24000
+a=rtpmap:97 SILK/16000
+a=rtpmap:98 speex/32000
+a=rtpmap:100 speex/16000
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:102 iLBC/8000
+a=rtpmap:3 GSM/8000
+a=rtpmap:103 speex/8000
+a=rtpmap:5 DVI4/8000
+a=rtpmap:6 DVI4/16000
+a=rtpmap:101 telephone-event/8000
+a=extmap:1 urn:ietf:params:rtp-hdrext:csrc-audio-level
+m=video 5058 RTP/AVP 104 99
+a=inactive
+a=rtpmap:104 H264/90000
+a=fmtp:104 profile-level-id=4DE01f;packetization-mode=1
+a=imageattr:104 send * recv [x=[0-1920],y=[0-1080]]
+a=rtpmap:99 H264/90000
+a=fmtp:99 profile-level-id=4DE01f
+a=imageattr:99 send * recv [x=[0-1920],y=[0-1080]]
+

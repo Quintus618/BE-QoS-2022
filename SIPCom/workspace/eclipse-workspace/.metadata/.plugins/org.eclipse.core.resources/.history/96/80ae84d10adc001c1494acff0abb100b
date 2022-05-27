@@ -767,8 +767,7 @@ public class Proxy extends UnicastRemoteObject implements SipListener, RemoteSer
         return snmpAssistant;
     }
 
-    
-    
+
     public void processRequest(RequestEvent requestEvent)
     {
         Request request = requestEvent.getRequest();
@@ -1852,8 +1851,7 @@ log.info("processRequest");
      */
     public void forwardRequest(URI targetURI, Request request, SipProvider sipProvider, ServerTransaction serverTransaction, boolean statefullForwarding) throws InvalidArgumentException, ParseException, SipException
     {
-        
-    	// Statefull means the use of transactions
+        // Statefull means the use of transactions
         statefullForwarding = statefullForwarding & (serverTransaction != null);
 
         /**
@@ -2579,12 +2577,6 @@ log.info("processRequest");
         if ((((CSeqHeader) response.getHeader(CSeqHeader.NAME)).getMethod()).equals("INVITE")) {
         	SIPResponse sr = (SIPResponse) response ;
         	log.info(sr);
-        }
-        
-        String msg = null;
-        Request req;
-        if (msg.substring(0, 2).matches("NOK")) {
-        	
         }
         
         ListIterator viaList = response.getHeaders(ViaHeader.NAME);

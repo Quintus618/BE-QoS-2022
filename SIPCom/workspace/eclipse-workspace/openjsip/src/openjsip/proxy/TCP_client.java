@@ -13,7 +13,6 @@ public class TCP_client {
 	private InputStream input;
 	private BufferedReader br;
 	private volatile String resp = null;
-	private TCP_send sender;
 	
 	public TCP_client() {
 		this.port = 12121;
@@ -37,13 +36,16 @@ public class TCP_client {
 		}
 	}
 	
+	
 	public String send(String msg) {
+
 		this.pw.println(msg);
 		try {
 			this.resp = this.br.readLine();
-		} catch(IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return this.resp;
 	}
+
 }
